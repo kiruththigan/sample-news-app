@@ -46,7 +46,7 @@ class _HeadlinesScreenState extends State<HeadlinesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Top News",
+          "Top Headlines",
           style: TextStyle(
               color: Colors.black, fontSize: 30, fontWeight: FontWeight.w500),
         ),
@@ -69,6 +69,9 @@ class _HeadlinesScreenState extends State<HeadlinesScreen> {
                   itemCount: value.articles?.data.length,
                   itemBuilder: (context, index) {
                     final article = value.articles?.data[index];
+                    if (article?.urlToImage == null) {
+                      return const SizedBox.shrink();
+                    }
                     return NewsCard(
                       article: article!,
                       bookmarkedArticles: value.bookmarkedArticles!,
@@ -81,3 +84,6 @@ class _HeadlinesScreenState extends State<HeadlinesScreen> {
     );
   }
 }
+
+
+
