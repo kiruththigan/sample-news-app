@@ -48,6 +48,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   itemCount: value.articles?.data.length,
                   itemBuilder: (context, index) {
                     final article = value.articles?.data[index];
+                    if (article?.urlToImage == null) {
+                      return const SizedBox.shrink();
+                    }
                     return NewsCard(
                       article: article!,
                       bookmarkedArticles: value.bookmarkedArticles!,

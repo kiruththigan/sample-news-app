@@ -13,6 +13,8 @@ class NewsProvider with ChangeNotifier {
   List<NewsArticle>? _bookmarkedArticles;
   Category? _selectedCategory;
   String _searchKey = "";
+  DateTime? _fromDate;
+  DateTime? _toDate;
 
   bool? get isLoading => _isLoading;
 
@@ -23,6 +25,10 @@ class NewsProvider with ChangeNotifier {
   Category? get selectedCategory => _selectedCategory;
 
   String? get searchKey => _searchKey;
+
+  DateTime? get fromDate => _fromDate;
+
+  DateTime? get toDate => _toDate;
 
   final String apiKey = 'dc8a840dd2cf4d8bb8890a5b2674ce57';
   final String apiUrl = 'https://newsapi.org/v2';
@@ -100,14 +106,23 @@ class NewsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> searchNews(String searchKey) async {
+  Future<void> searchNews(String searchKey, {String? from, String? to}) async {
     _isLoading = true;
     _articles = null;
     notifyListeners();
     try {
-      if (searchKey != "") {
-        final response = await http.get(Uri.parse(
-            '$apiUrl/everything?q=${searchKey.toLowerCase()}&apiKey=$apiKey'));
+      if (searchKey.isNotEmpty) {
+        String url =
+            '$apiUrl/everything?q=${searchKey.toLowerCase()}&apiKey=$apiKey&sortBy=publishedAt';
+
+        if (from != null) {
+          url += '&from=$from';
+        }
+        if (to != null) {
+          url += '&to=$to';
+        }
+
+        final response = await http.get(Uri.parse(url));
 
         if (response.statusCode == 200) {
           _articles = NewsArticleModel.fromJson(json.decode(response.body));
@@ -118,8 +133,8 @@ class NewsProvider with ChangeNotifier {
     } catch (error) {
       throw Exception('Error: $error');
     } finally {
-      notifyListeners();
       _isLoading = false;
+      notifyListeners();
     }
   }
 
@@ -174,6 +189,26 @@ class NewsProvider with ChangeNotifier {
   Future<void> setSearchKey(String searchKey) async {
     try {
       _searchKey = searchKey;
+    } catch (error) {
+      throw Exception('Error: $error');
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> setFromDate(DateTime fromDate) async {
+    try {
+      _fromDate = fromDate;
+    } catch (error) {
+      throw Exception('Error: $error');
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> setToDate(DateTime toDate) async {
+    try {
+      _toDate = toDate;
     } catch (error) {
       throw Exception('Error: $error');
     } finally {

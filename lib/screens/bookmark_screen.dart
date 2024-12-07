@@ -24,7 +24,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Bookmark',
+          'Bookmarks',
           style: TextStyle(
               color: Colors.black, fontSize: 30, fontWeight: FontWeight.w500),
         ),
@@ -41,6 +41,9 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                   itemCount: value.bookmarkedArticles?.length,
                   itemBuilder: (context, index) {
                     final article = value.bookmarkedArticles?[index];
+                    if (article?.urlToImage == null) {
+                      return const SizedBox.shrink();
+                    }
                     return NewsCard(
                       article: article!,
                       bookmarkedArticles: value.bookmarkedArticles!,
